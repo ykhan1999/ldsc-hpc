@@ -93,7 +93,7 @@ jobs:
         run: |
           New-Item -ItemType Directory -Force dist | Out-Null
           Copy-Item target\${{ matrix.target }}\release\ldsc.exe dist\
-          Copy-Item LICENSE README.md dist\
+          Copy-Item -Path LICENSE,README.md -Destination dist\
           Copy-Item vcpkg\installed\x64-windows\bin\*.dll dist\
           Compress-Archive -Path dist\* -DestinationPath "dist\${{ matrix.artifact }}.${{ matrix.archive_ext }}"
           (Get-FileHash "dist\${{ matrix.artifact }}.${{ matrix.archive_ext }}" -Algorithm SHA256).Hash.ToLower() + "  ${{ matrix.artifact }}.${{ matrix.archive_ext }}" | Out-File -Encoding ASCII "dist\${{ matrix.artifact }}.${{ matrix.archive_ext }}.sha256"

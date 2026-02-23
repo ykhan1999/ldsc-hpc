@@ -127,11 +127,6 @@ curl -L -o ldsc_macos-aarch64.tar.gz \
 tar -xzf ldsc_macos-aarch64.tar.gz
 ./ldsc --help
 
-# macOS (Intel)
-curl -L -o ldsc_macos-x86_64.tar.gz \
-  https://github.com/sharifhsn/ldsc/releases/latest/download/ldsc_macos-x86_64.tar.gz
-tar -xzf ldsc_macos-x86_64.tar.gz
-./ldsc --help
 ```
 
 ---

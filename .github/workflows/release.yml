@@ -22,10 +22,6 @@ jobs:
             artifact: ldsc_linux-x86_64
             sha_cmd: sha256sum
           - os: macos-14
-            target: x86_64-apple-darwin
-            artifact: ldsc_macos-x86_64
-            sha_cmd: shasum -a 256
-          - os: macos-14
             target: aarch64-apple-darwin
             artifact: ldsc_macos-aarch64
             sha_cmd: shasum -a 256

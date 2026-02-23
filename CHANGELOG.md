@@ -6,6 +6,19 @@ Versioning: [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [1.0.3] — 2026-02-23
+
+### Added
+- `cts-annot` continuous-annotation binning (Python `--cts-bin`) and `.annot` output.
+- Cell-type-specific `h2-cts` support with `.ldcts` inputs and `--print-all-cts`.
+- Overlap-aware partitioned h2 via `--overlap-annot` with frequency inputs.
+- Windows (MSVC) system-BLAS support via vcpkg (OpenBLAS + Clapack).
+- GitHub Release artifacts for Linux/macOS/Windows with checksums.
+
+### Changed
+- Release packaging uses system OpenBLAS on Linux/macOS.
+- README reorganized for a faster install/usage path.
+
 ## [0.1.0] — 2026-02-19
 
 ### Added
@@ -23,5 +36,6 @@ Versioning: [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Statically linked OpenBLAS (no runtime library needed)
 - 40 unit tests; integration smoke test for ldscore
 
-[Unreleased]: https://github.com/sharifhsn/ldsc/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/sharifhsn/ldsc/compare/v1.0.3...HEAD
+[1.0.3]: https://github.com/sharifhsn/ldsc/releases/tag/v1.0.3
 [0.1.0]: https://github.com/sharifhsn/ldsc/releases/tag/v0.1.0

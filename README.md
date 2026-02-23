@@ -233,9 +233,10 @@ sudo apt-get install cmake gfortran libgfortran-dev
 
 ### Prebuilt Binaries
 
-Releases include Linux and macOS tarballs that contain `ldsc`, `LICENSE`, and `README.md`.
-These binaries are built against **system OpenBLAS** (dynamic), so you may need to install
-OpenBLAS on the target machine (or use Docker for a self-contained run).
+Releases include Linux, macOS, and Windows archives that contain `ldsc`, `LICENSE`, and `README.md`.
+Linux/macOS binaries are built against **system OpenBLAS** (dynamic), so you may need to install
+OpenBLAS on the target machine (or use Docker for a self-contained run). The Windows zip bundles
+the required OpenBLAS/Clapack DLLs alongside `ldsc.exe`.
 
 ```bash
 # Linux (x86_64)
@@ -249,6 +250,10 @@ curl -L -o ldsc_macos-aarch64.tar.gz \
   https://github.com/sharifhsn/ldsc/releases/latest/download/ldsc_macos-aarch64.tar.gz
 tar -xzf ldsc_macos-aarch64.tar.gz
 ./ldsc --help
+
+# Windows (x86_64)
+# Download the zip from the release page and extract:
+# https://github.com/sharifhsn/ldsc/releases/latest/download/ldsc_windows-x86_64.zip
 
 ```
 

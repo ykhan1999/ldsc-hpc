@@ -1695,7 +1695,7 @@ dependencies = [
 
 [[package]]
 name = "ldsc"
-version = "0.1.2"
+version = "1.0.3"
 dependencies = [
  "anyhow",
  "bed-reader",

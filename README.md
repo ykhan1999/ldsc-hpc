@@ -303,6 +303,8 @@ Windows (MSVC) users can use vcpkg for the system build:
 
 ```powershell
 vcpkg install openblas clapack
+setx VCPKGRS_DYNAMIC 1
+setx VCPKGRS_TRIPLET x64-windows
 cargo build --release --no-default-features --features blas-openblas-system
 ```
 

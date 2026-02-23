@@ -13,6 +13,12 @@ fn main() {
 
     // On Windows, OpenBLAS from vcpkg does not ship LAPACK symbols.
     // Ensure Clapack is available and linked to satisfy LAPACK calls.
+    if env::var("VCPKGRS_DYNAMIC").is_err() {
+        env::set_var("VCPKGRS_DYNAMIC", "1");
+    }
+    if env::var("VCPKGRS_TRIPLET").is_err() {
+        env::set_var("VCPKGRS_TRIPLET", "x64-windows");
+    }
     match vcpkg::Config::new()
         .emit_includes(false)
         .find_package("clapack")

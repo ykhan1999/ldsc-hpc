@@ -33,4 +33,6 @@ jobs:
         env:
           VCPKG_DEFAULT_TRIPLET: x64-windows
           VCPKG_ROOT: ${{ github.workspace }}\\vcpkg
+          VCPKGRS_DYNAMIC: "1"
+          VCPKGRS_TRIPLET: x64-windows
         run: cargo build --release --locked --target x86_64-pc-windows-msvc --no-default-features --features blas-openblas-system

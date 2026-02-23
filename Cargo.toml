@@ -55,6 +55,9 @@ bzip2-rs = "0.1.2"
 # Temp files for on-the-fly .bz2 decompression
 tempfile = "3"
 
+[build-dependencies]
+vcpkg = "0.2"
+
 [profile.release]
 opt-level     = 3
 lto           = "thin"

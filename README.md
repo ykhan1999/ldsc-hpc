@@ -185,6 +185,13 @@ cargo build --release --no-default-features --features blas-openblas-system
 The system feature skips the OpenBLAS source build and links via `pkg-config`.
 Keep the default static build if you want a self-contained binary.
 
+Windows (MSVC) users can use vcpkg for the system build:
+
+```powershell
+vcpkg install openblas clapack
+cargo build --release --no-default-features --features blas-openblas-system
+```
+
 ### Runtime tuning (optional)
 
 The following global flags are available for performance tuning but are **not

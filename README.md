@@ -11,7 +11,7 @@ identical numerical output and a 7× speedup on LD score computation.
 
 ---
 
-## Get Started
+## Install
 
 Fastest (no Rust required):
 
@@ -19,14 +19,10 @@ Fastest (no Rust required):
 docker run --rm ghcr.io/sharifhsn/ldsc:latest --help
 ```
 
-Standalone binaries are available in GitHub Releases (see “Prebuilt Binaries” below).
+Local install options:
 
-Native install (requires Rust):
-
-```bash
-cargo install ldsc
-ldsc --help
-```
+- Prebuilt binaries from GitHub Releases (see “Prebuilt Binaries” below).
+- Cargo install (requires Rust): `cargo install ldsc`
 
 ## Quick Start
 
@@ -71,137 +67,6 @@ ldsc rg \
   --w-ld-chr eur_w_ld_chr/ \
   --out trait1_vs_trait2
 ```
-
----
-
-## Installation Details
-
-Native builds require Rust ≥ 1.85 and a C toolchain with Fortran support to build the default
-statically-linked OpenBLAS. If you opt into the system BLAS feature, you only need
-the system OpenBLAS development package.
-
-On Debian/Ubuntu (default static build):
-
-```bash
-sudo apt-get install cmake gfortran libgfortran-dev
-```
-
----
-
-## Docker
-
-Images are published to the GitHub Container Registry on every push to `main` and for each version tag.
-
-```bash
-docker pull ghcr.io/sharifhsn/ldsc:latest
-
-# Run with local data mounted
-docker run --rm \
-  -v /path/to/data:/data \
-  ghcr.io/sharifhsn/ldsc:latest \
-  h2 --h2         /data/trait.sumstats.gz \
-     --ref-ld-chr /data/eur_w_ld_chr/ \
-     --w-ld-chr   /data/eur_w_ld_chr/ \
-     --out        /data/results
-```
-
-Version tags (`v1.2.3`) produce `:1.2.3`, `:1.2`, and `:latest`. Pushes to `main` produce a `:main`
-tag and a short-SHA tag (`:sha-XXXXXXX`).
-
----
-
-## Prebuilt Binaries
-
-Releases include Linux and macOS tarballs that contain `ldsc`, `LICENSE`, and `README.md`.
-These binaries are built against **system OpenBLAS** (dynamic), so you may need to install
-OpenBLAS on the target machine (or use Docker for a self-contained run).
-
-```bash
-# Linux (x86_64)
-curl -L -o ldsc_linux-x86_64.tar.gz \
-  https://github.com/sharifhsn/ldsc/releases/latest/download/ldsc_linux-x86_64.tar.gz
-tar -xzf ldsc_linux-x86_64.tar.gz
-./ldsc --help
-
-# macOS (Apple Silicon)
-curl -L -o ldsc_macos-aarch64.tar.gz \
-  https://github.com/sharifhsn/ldsc/releases/latest/download/ldsc_macos-aarch64.tar.gz
-tar -xzf ldsc_macos-aarch64.tar.gz
-./ldsc --help
-
-```
-
----
-
-## Release Process (Maintainers)
-
-Releases are cut with `cargo-release` and tagged as `vX.Y.Z`. Tag pushes trigger the release
-workflow, which builds and uploads platform tarballs to GitHub Releases.
-
-```bash
-cargo release patch
-cargo release patch --execute
-```
-
-### Building the image locally
-
-Requires Docker with BuildKit (default since Docker 23):
-
-```bash
-docker build -t ldsc .
-```
-
-The multi-stage `Dockerfile` uses [cargo-chef](https://github.com/LukeMathWalker/cargo-chef) to
-cache dependency compilation in a separate layer, so incremental rebuilds only recompile changed
-source files. The runtime image is `debian:bookworm-slim` plus `libgfortran5` for the
-statically-linked OpenBLAS.
-
----
-
-## Building from source
-
-Requires a Rust toolchain (≥ 1.85; edition 2024 features used). OpenBLAS is linked statically — no
-runtime library installation needed.
-
-```bash
-cargo build --release
-# binary: target/release/ldsc
-```
-
-The release profile sets `opt-level = 3`, `lto = "thin"`, `codegen-units = 1`.
-
-### BLAS configuration
-
-By default this crate builds **OpenBLAS from source** and links it statically
-(`blas-openblas-static`). For CI or HPC environments that prefer a system BLAS,
-use the system feature instead:
-
-```bash
-# Debian/Ubuntu system OpenBLAS
-sudo apt-get install libopenblas-dev pkg-config
-cargo build --release --no-default-features --features blas-openblas-system
-```
-
-The system feature skips the OpenBLAS source build and links via `pkg-config`.
-Keep the default static build if you want a self-contained binary.
-
-Windows (MSVC) users can use vcpkg for the system build:
-
-```powershell
-vcpkg install openblas clapack
-cargo build --release --no-default-features --features blas-openblas-system
-```
-
-### Runtime tuning (optional)
-
-The following global flags are available for performance tuning but are **not
-heavily battle-tested**. Use them only when needed:
-
-- `--blas-threads N`: OpenBLAS thread count (default 4; affects all subcommands).
-- `--rayon-threads N`: Rayon thread count for jackknife in `h2`/`rg`.
-- `--polars-threads N`: Polars thread count for CSV streaming in `munge-sumstats`.
-
-`ldsc --version` prints the compiled BLAS backend (e.g., `openblas-static`).
 
 ---
 
@@ -351,6 +216,106 @@ ldsc cts-annot \
   --cts-names DAF,DIST_TO_GENE \
   --annot-file cts.annot.gz
 ```
+
+---
+
+## Installation Details
+
+Native builds require Rust ≥ 1.85 and a C toolchain with Fortran support to build the default
+statically-linked OpenBLAS. If you opt into the system BLAS feature, you only need
+the system OpenBLAS development package.
+
+On Debian/Ubuntu (default static build):
+
+```bash
+sudo apt-get install cmake gfortran libgfortran-dev
+```
+
+### Prebuilt Binaries
+
+Releases include Linux and macOS tarballs that contain `ldsc`, `LICENSE`, and `README.md`.
+These binaries are built against **system OpenBLAS** (dynamic), so you may need to install
+OpenBLAS on the target machine (or use Docker for a self-contained run).
+
+```bash
+# Linux (x86_64)
+curl -L -o ldsc_linux-x86_64.tar.gz \
+  https://github.com/sharifhsn/ldsc/releases/latest/download/ldsc_linux-x86_64.tar.gz
+tar -xzf ldsc_linux-x86_64.tar.gz
+./ldsc --help
+
+# macOS (Apple Silicon)
+curl -L -o ldsc_macos-aarch64.tar.gz \
+  https://github.com/sharifhsn/ldsc/releases/latest/download/ldsc_macos-aarch64.tar.gz
+tar -xzf ldsc_macos-aarch64.tar.gz
+./ldsc --help
+
+```
+
+### Docker
+
+Images are published to the GitHub Container Registry on every push to `main` and for each version tag.
+
+```bash
+docker pull ghcr.io/sharifhsn/ldsc:latest
+
+# Run with local data mounted
+docker run --rm \
+  -v /path/to/data:/data \
+  ghcr.io/sharifhsn/ldsc:latest \
+  h2 --h2         /data/trait.sumstats.gz \
+     --ref-ld-chr /data/eur_w_ld_chr/ \
+     --w-ld-chr   /data/eur_w_ld_chr/ \
+     --out        /data/results
+```
+
+Version tags (`v1.2.3`) produce `:1.2.3`, `:1.2`, and `:latest`. Pushes to `main` produce a `:main`
+tag and a short-SHA tag (`:sha-XXXXXXX`).
+
+### Building from source
+
+Requires a Rust toolchain (≥ 1.85; edition 2024 features used). OpenBLAS is linked statically — no
+runtime library installation needed.
+
+```bash
+cargo build --release
+# binary: target/release/ldsc
+```
+
+The release profile sets `opt-level = 3`, `lto = "thin"`, `codegen-units = 1`.
+
+### BLAS configuration
+
+By default this crate builds **OpenBLAS from source** and links it statically
+(`blas-openblas-static`). For CI or HPC environments that prefer a system BLAS,
+use the system feature instead:
+
+```bash
+# Debian/Ubuntu system OpenBLAS
+sudo apt-get install libopenblas-dev pkg-config
+cargo build --release --no-default-features --features blas-openblas-system
+```
+
+The system feature skips the OpenBLAS source build and links via `pkg-config`.
+Keep the default static build if you want a self-contained binary.
+
+Windows (MSVC) users can use vcpkg for the system build:
+
+```powershell
+vcpkg install openblas clapack
+cargo build --release --no-default-features --features blas-openblas-system
+```
+
+### Runtime tuning (optional)
+
+The following global flags are available for performance tuning but are **not
+heavily battle-tested**. Use them only when needed:
+
+- `--blas-threads N`: OpenBLAS thread count (default 4; affects all subcommands).
+- `--rayon-threads N`: Rayon thread count for jackknife in `h2`/`rg`.
+- `--polars-threads N`: Polars thread count for CSV streaming in `munge-sumstats`.
+
+`ldsc --version` prints the compiled BLAS backend (e.g., `openblas-static`).
 
 ---
 
@@ -598,3 +563,30 @@ make_annot.rs        BED → 0/1 annotation generator.
 | `clap` | 4 | derive-macro CLI argument parsing |
 | `anyhow` / `thiserror` | 1 / 2 | error propagation |
 | `flate2` | 1 | gzip output for .sumstats.gz and .ldscore.gz |
+
+---
+
+## Maintainers
+
+### Release process
+
+Releases are cut with `cargo-release` and tagged as `vX.Y.Z`. Tag pushes trigger the release
+workflow, which builds and uploads platform tarballs to GitHub Releases.
+
+```bash
+cargo release patch
+cargo release patch --execute
+```
+
+### Building the image locally
+
+Requires Docker with BuildKit (default since Docker 23):
+
+```bash
+docker build -t ldsc .
+```
+
+The multi-stage `Dockerfile` uses [cargo-chef](https://github.com/LukeMathWalker/cargo-chef) to
+cache dependency compilation in a separate layer, so incremental rebuilds only recompile changed
+source files. The runtime image is `debian:bookworm-slim` plus `libgfortran5` for the
+statically-linked OpenBLAS.

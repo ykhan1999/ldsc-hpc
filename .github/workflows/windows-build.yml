@@ -31,5 +31,6 @@ jobs:
         shell: bash
         env:
           PKG_CONFIG_PATH: C:/msys64/mingw64/lib/pkgconfig
-          PATH: C:/msys64/mingw64/bin:${{ env.PATH }}
-        run: cargo build --release --locked --target x86_64-pc-windows-gnu --no-default-features --features blas-openblas-system
+        run: |
+          export PATH="$CARGO_HOME/bin:/c/msys64/mingw64/bin:$PATH"
+          cargo build --release --locked --target x86_64-pc-windows-gnu --no-default-features --features blas-openblas-system
